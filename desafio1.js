@@ -1,36 +1,55 @@
 class ProductManager {
     constructor() {
-        this.products = {};
+        this.products = [];
     }
 
     addProduct(product) {
-        if (this.products[product.id]) {
-            console.log("Producto existente");
+        if (
+            product.title &&
+            product.thumbnail &&
+            product.price !== undefined &&
+            product.code &&
+            product.description &&
+            product.stock !== undefined
+        ) {
+            const isCodeRepeated = this.products.some((p) => p.code === product.code);
+            if (isCodeRepeated) {
+                console.log("Ya existe un producto con este código");
+            } else {
+                const existingProduct = this.products.find((p) => p.id === product.id);
+                if (existingProduct) {
+                    console.log("Producto existente");
+                } else {
+                    this.products.push(product);
+                }
+            }
         } else {
-            this.products[product.id] = product;
+            console.log("Campos requeridos faltantes en el producto");
         }
     }
 
     findProductById(id) {
-        const product = this.products[id];
+        const product = this.products.find((p) => p.id === id);
         if (product) {
-            console.log(product);
+            return product;
         } else {
             console.log("Not Found");
+            return null;
         }
     }
 
     findProductByCode(code) {
-        const product = Object.values(this.products).find((prod) => prod.code === code);
+        const product = this.products.find((p) => p.code === code);
         if (product) {
-            console.log(product);
+            return product;
         } else {
             console.log("Not Found");
+            return null;
         }
     }
 
     getProducts() {
-        console.log(Object.values(this.products));
+        console.log(this.products);
     }
 }
 
@@ -47,12 +66,9 @@ class Product {
 
     static idGenerate() {
         if (!this.idIncrement) {
-
             this.idIncrement = 1;
         } else {
-
             this.idIncrement++;
-
         }
         return this.idIncrement;
     }
@@ -69,5 +85,5 @@ productManager.addProduct(prod2);
 productManager.addProduct(prod3);
 
 productManager.getProducts();
-productManager.findProductByCode("BVCD15");
-productManager.findProductById(2);
+console.log(productManager.findProductByCode("BVCD15"));
+console.log(productManager.findProductById(2));
